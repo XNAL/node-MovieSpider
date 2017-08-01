@@ -1,0 +1,16 @@
+{
+  "name": "movie-spider",
+  "version": "1.0.0",
+  "description": "a movie spider",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Don",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.5.0",
+    "cheerio": "^1.0.0-rc.2",
+    "superagent": "^3.5.2"
+  }
+}
