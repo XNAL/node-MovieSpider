@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const setting = require('./setting');
+const imgDir = __dirname + '/img/';
 
 function fetch_data_get(url, queryParams) {
 	return new Promise((reslove, reject) => {
@@ -22,7 +23,11 @@ function downloadImg(urls, folderName) {
 		fetch_data_get(img, {})
 			.then((result) => {
 				let fileName = path.basename(img);
-				fs.writeFile( __dirname + '/img/' + folderName + '/' + fileName, result.body, (err) => {
+				let folder = imgDir + folderName;
+				if(!fs.existsSync(folder)) {
+					fs.mkdirSync(folder);
+				}
+				fs.writeFile(folder + '/' + fileName, result.body, (err) => {
 					if (err) {
 						console.log(img, '图片写入失败：', err);
 					} else {

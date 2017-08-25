@@ -4,6 +4,10 @@ const fs = require('fs');
 const util =  require('./util');
 const setting = require('./setting');
 
+const dataDir = __dirname + '/data/movieData-';
+const dataErrDir = __dirname + '/data/movieDataErr-';
+const imgPrefix = 'movieImg-';
+
 const reqUrl = 'http://movie.mtime.com/boxoffice/';
 const reqParams = {
 	'year': 2017,
@@ -15,7 +19,7 @@ const reqParams = {
 	'timestamp': 1501576013654,
 	'version': '07bb781100018dd58eafc3b35d42686804c6df8d',
 	'dataType': 'json'
-}
+};
 
 
 let movieData = [],
@@ -69,23 +73,20 @@ function getMovieData(pageIndex, pageTotal) {
 				}, setting.timeout);
 			} else {
 				console.log('电影数据获取完毕，共 ', movieData.length, '条记录。');
-				fs.writeFile(__dirname + '/data/movieData-' + reqParams.year + '.json', JSON.stringify(movieData), (err) => {
+				fs.writeFile(dataDir + reqParams.year + '.json', JSON.stringify(movieData), (err) => {
 					if (err) {
 						console.log(err);
 					} else {
 						console.log('数据写入成功');
 					}
 				});
-				let folderName = 'movieImg-' + reqParams.year;
-				if(!fs.existsSync(__dirname + '/img/' + folderName)) {
-					fs.mkdirSync(__dirname + '/img/' + folderName);
-				}
+				let folderName = imgPrefix + reqParams.year;
 				util.downloadImg(movieImgs, folderName);
 			}
 		})
 		.catch((err) => {
 			console.log('获取电影数据失败：', err);
-			fs.writeFile(__dirname + '/data/movieDataErr-' + reqParams.year + '.json', JSON.stringify(movieData), (err) => {
+			fs.writeFile(dataErrDir + reqParams.year + '.json', JSON.stringify(movieData), (err) => {
 				if (err) {
 					console.log(err);
 				} else {
