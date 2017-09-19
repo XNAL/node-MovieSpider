@@ -68,6 +68,7 @@ function getMovieData(pageIndex, pageTotal) {
 						point: _this.find('.gradebox .point').text(),
 						total: _this.find('.totalbox .totalnum').text()
 					}),
+					// 存储图片地址，统一下载
 					movieImgs.push(_this.find('.picbox img').attr('src').replace(/\/u\//, ""));
 				})
 			})
@@ -80,6 +81,7 @@ function getMovieData(pageIndex, pageTotal) {
 				}, setting.timeout);
 			} else {
 				console.log('电影数据获取完毕，共 ', movieData.length, '条记录。');
+				// 电影数据写入json文件
 				fs.writeFile(dataDir + reqParams.year + '.json', JSON.stringify(movieData), (err) => {
 					if (err) {
 						console.log(err);
@@ -87,6 +89,7 @@ function getMovieData(pageIndex, pageTotal) {
 						console.log('数据写入成功');
 					}
 				});
+				// 下载电影图片
 				let folderName = imgPrefix + reqParams.year;
 				util.downloadImg(movieImgs, folderName);
 			}
