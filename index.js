@@ -8,6 +8,7 @@ const dataDir = __dirname + '/data/movieData-';
 const dataErrDir = __dirname + '/data/movieDataErr-';
 const imgPrefix = 'movieImg-';
 
+// 根据网站api得到相应的url和参数
 const reqUrl = 'http://movie.mtime.com/boxoffice/';
 const reqParams = {
 	'year': 2017,
@@ -25,15 +26,18 @@ const reqParams = {
 let movieData = [],
 	movieImgs = [];
 
+// 启动时直接执行代码 
 (function spider() {
 	util.fetch_data_get(reqUrl, reqParams)
 		.then((result) => {
+			// 根据页面结构获取总的页数，然后再分页获取数据
 			let $ = cheerio.load(result.body.html);
 			let pageTotal = $('.bocontent .pagesize a:last-child').data('page') || 0;
 			console.log('电影数据总页数：', pageTotal);
 			return pageTotal;
 		})
 		.then((pageTotal) => {
+			// 分页获取数据
 			getMovieData(0, pageTotal);
 		})
 		.catch((err) => {
@@ -41,10 +45,12 @@ let movieData = [],
 		})
 })();
 
+// 获取电影数据和图片的方法
 function getMovieData(pageIndex, pageTotal) {
 	reqParams.page = pageIndex;
 	util.fetch_data_get(reqUrl, reqParams)
 		.then((result) => {
+			// 根据页面结构获取所需数据
 			let $ = cheerio.load(result.body.html);
 			$('.bocontent .boxofficelist dd').each((idx, elem) => {
 				$(elem).find('div.movietopmod').each((i, el) => {
@@ -67,6 +73,7 @@ function getMovieData(pageIndex, pageTotal) {
 			})
 			console.log('抓取第', pageIndex, '页的电影数据完毕，目前共 ', movieData.length, '条记录。');
 			if(pageIndex <= pageTotal) {
+				// 设置timeout防止网站反爬虫导致IP被禁
 				setTimeout(() => {
 					pageIndex ++;
 					getMovieData(pageIndex, pageTotal);

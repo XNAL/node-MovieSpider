@@ -6,6 +6,7 @@ const fs = require('fs');
 const setting = require('./setting');
 const imgDir = __dirname + '/img/';
 
+// 公共方法：通过get请求获取数据
 function fetch_data_get(url, queryParams) {
 	return new Promise((reslove, reject) => {
 		superagent
@@ -18,6 +19,7 @@ function fetch_data_get(url, queryParams) {
 	})
 }
 
+// 异步下载图片
 function downloadImg(urls, folderName) {
 	async.mapLimit(urls, setting.asyncNum, (img, callback) => {
 		fetch_data_get(img, {})
